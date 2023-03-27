@@ -3,8 +3,17 @@
 ## Документация по проекту
 
 Для запуска проекта необходимо:
+1. Скопировать репозиторий командой  
 
-1. Запустить сборку контейнера
+```bash
+git clone https://github.com/n0iz3on3/Docker.git
+```
+Далее применить миграции
+```bash
+python3 manage.py migrate
+```
+
+2. Запустить сборку контейнера
 
 ```bash
 docker build . --tag=test_docker_sp
@@ -16,7 +25,7 @@ docker build . --tag=test_docker_sp
 docker image ls
 ```
 
-2. Запускаем приложение
+3. Запустить приложение
 
 ```bash
 docker run -it -d -p 9090:8000 --restart=always test_docker_sp
