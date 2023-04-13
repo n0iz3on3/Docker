@@ -1,0 +1,52 @@
+version: '3.9'
+
+networks:
+  backend:
+  frontend:
+
+services:
+    backend:
+        build: .
+        command: gunicorn stocks_products.wsgi -b 0.0.0.0:8000
+        volumes:
+            - static_data:/app/static
+            - media_data:/app/media
+        expose:
+            - 8000
+        restart: always
+        env_file:
+            - .env
+        depends_on:
+            - postgresql
+        networks:
+            - backend
+            - frontend
+
+    postgresql:
+        image: postgres:12-alpine
+        ports:
+            - "5433:5432"
+        restart: always
+        volumes:
+            - postgres_data:/var/lib/postgresql/data:rw
+        env_file:
+            - .env
+        networks:
+            - backend
+
+    proxy:
+        build: ./proxy
+        volumes:
+            - static_data:/app/static
+            - media_data:/app/media
+        restart: always
+        ports:
+            - "8000:80"
+        depends_on:
+            - backend
+        networks:
+            - frontend
+volumes:
+    static_data:
+    media_data:
+    postgres_data:
